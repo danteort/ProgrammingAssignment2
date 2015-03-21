@@ -2,6 +2,11 @@
 ## the inverse of a matrix rather than re-calculating the solution every time.
 
 ## This function creates a special 'matrix' object that can cache its inverse.
+## In reality, this 'matrix' is a list containing a function to:
+## 1. set the value of the matrix
+## 2. get the value of the matrix
+## 3. set the value of the inverse
+## 4. get the value of the inverse
 
 makeCacheMatrix <- function(x = matrix()) {
         m <- NULL
@@ -10,7 +15,7 @@ makeCacheMatrix <- function(x = matrix()) {
                 m <<- NULL
         }
         get <- function () x
-        setinverse <- function(inverse) m <<- inverse
+        setinverse <- function(solve) m <<- inverse
         getinverse <- function () m
         list (set = set, get = get,
               setinverse = setinverse,
@@ -30,6 +35,8 @@ cacheSolve <- function(x, ...) {
                 return(m)
         }
         data <- x$get()
+        ## if the inverse was not found in the cache, use 'setinverse' 
+        ## and add it to the cache.
         m <- solve(data, ...)
         x$setinverse(m)
         m
